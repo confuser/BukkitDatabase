@@ -25,7 +25,6 @@ public class Database {
 	private String user;
 	private String pass;
 	private String url;
-	public Logger log;
 	private Connection connection;
 	private JavaPlugin plugin;
 	private boolean queryInProgress = false;
