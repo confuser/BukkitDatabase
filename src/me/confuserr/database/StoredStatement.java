@@ -45,5 +45,6 @@ public class StoredStatement {
 			getPreparedStatement();
 		
 		statement.executeUpdate();
+		statement.close();
 	}
 }
