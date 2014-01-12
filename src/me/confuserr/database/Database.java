@@ -223,7 +223,7 @@ public class Database {
 		}
 	}
 
-	public boolean checkTable(String table) {
+	public boolean tableExists(String table) {
 		try {
 			connection = open();
 			// this.connection = this.open();
@@ -251,17 +251,17 @@ public class Database {
 			return true;
 		return false;
 	}
-	
-	public boolean checkTables() {
+
+	public boolean tablesExist() {
 		boolean exists = false;
-		
+
 		for (String table : tables.values()) {
-			exists = checkTable(table);
-			
+			exists = tableExists(table);
+
 			if (!exists)
 				return false;
 		}
-		
+
 		return true;
 	}
 
