@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.collect.ImmutableMap;
@@ -252,6 +250,19 @@ public class Database {
 		if (query("SELECT * FROM " + table) == null)
 			return true;
 		return false;
+	}
+	
+	public boolean checkTables() {
+		boolean exists = false;
+		
+		for (String table : tables.values()) {
+			exists = checkTable(table);
+			
+			if (!exists)
+				return false;
+		}
+		
+		return true;
 	}
 
 	public boolean colExists(String table, String column) {
