@@ -10,8 +10,6 @@ import java.sql.Statement;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.google.common.collect.ImmutableMap;
 
 public class Database {
@@ -25,19 +23,17 @@ public class Database {
 	private String user;
 	private String pass;
 	private String url;
-	public Logger log;
+	public Logger logger;
 	private Connection connection;
-	private JavaPlugin plugin;
 	private boolean queryInProgress = false;
 	private ImmutableMap<String, String> tables;
 
-	public Database(String user, String pass, String url, JavaPlugin instance, Map<String, String> tables) {
+	public Database(String user, String pass, String url, Logger logger, Map<String, String> tables) {
 		this.user = user;
 		this.pass = pass;
 		this.url = url;
-		plugin = instance;
-
 		this.tables = ImmutableMap.copyOf(tables);
+		this.logger = logger;
 	}
 
 	private boolean initialize() {
@@ -45,7 +41,7 @@ public class Database {
 			Class.forName("com.mysql.jdbc.Driver");
 			return true;
 		} catch (ClassNotFoundException e) {
-			plugin.getLogger().severe("MySQL driver class missing: " + e.getMessage() + ".");
+			logger.severe("MySQL driver class missing: " + e.getMessage() + ".");
 			return false;
 		}
 	}
@@ -73,8 +69,8 @@ public class Database {
 				return DriverManager.getConnection(this.url, this.user, this.pass);
 			}
 		} catch (SQLException e) {
-			plugin.getLogger().severe(this.url);
-			plugin.getLogger().severe("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".");
+			logger.severe(this.url);
+			logger.severe("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".");
 		}
 		return null;
 	}
@@ -90,7 +86,7 @@ public class Database {
 				connection = null;
 			}
 		} catch (Exception e) {
-			plugin.getLogger().severe("Failed to close database connection: " + e.getMessage());
+			logger.severe("Failed to close database connection: " + e.getMessage());
 		}
 	}
 
@@ -114,8 +110,8 @@ public class Database {
 					return result;
 			}
 		} catch (SQLException e) {
-			plugin.getLogger().warning("Error in SQL query: " + e.getMessage());
-			plugin.getLogger().warning(query);
+			logger.warning("Error in SQL query: " + e.getMessage());
+			logger.warning(query);
 		}
 		return result;
 	}
@@ -129,8 +125,8 @@ public class Database {
 			int result = statement.executeUpdate(query);
 			return result;
 		} catch (SQLException e) {
-			plugin.getLogger().warning("Error in SQL query: " + e.getMessage());
-			plugin.getLogger().warning(query);
+			logger.warning("Error in SQL query: " + e.getMessage());
+			logger.warning(query);
 		}
 		return 0;
 	}
@@ -144,8 +140,8 @@ public class Database {
 			return ps;
 		} catch (SQLException e) {
 			if (!e.toString().contains("not return ResultSet")) {
-				plugin.getLogger().warning("Error in SQL prepare() query: " + e.getMessage());
-				plugin.getLogger().warning(query);
+				logger.warning("Error in SQL prepare() query: " + e.getMessage());
+				logger.warning(query);
 			}
 		}
 		return ps;
@@ -160,8 +156,8 @@ public class Database {
 			return ps;
 		} catch (SQLException e) {
 			if (!e.toString().contains("not return ResultSet")) {
-				plugin.getLogger().warning("Error in SQL prepare() query: " + e.getMessage());
-				plugin.getLogger().warning(query);
+				logger.warning("Error in SQL prepare() query: " + e.getMessage());
+				logger.warning(query);
 			}
 		}
 		return ps;
@@ -206,17 +202,17 @@ public class Database {
 		try {
 			this.connection = this.open();
 			if (query.equals("") || query == null) {
-				plugin.getLogger().severe("SQL query empty: createTable(" + query + ")");
+				logger.severe("SQL query empty: createTable(" + query + ")");
 				return false;
 			}
 			statement = connection.createStatement();
 			statement.execute(query);
 			return true;
 		} catch (SQLException e) {
-			plugin.getLogger().severe(e.getMessage());
+			logger.severe(e.getMessage());
 			return false;
 		} catch (Exception e) {
-			plugin.getLogger().severe(e.getMessage());
+			logger.severe(e.getMessage());
 			return false;
 		}
 	}
@@ -226,7 +222,7 @@ public class Database {
 			connection = open();
 			// this.connection = this.open();
 			if (connection == null) {
-				plugin.getLogger().severe("Unable to check if tables exist");
+				logger.severe("Unable to check if tables exist");
 				return false;
 			}
 			Statement statement = connection.createStatement();
@@ -241,7 +237,7 @@ public class Database {
 			if (e.getMessage().contains("exist")) {
 				return false;
 			} else {
-				plugin.getLogger().info("Error in SQL query: " + e.getMessage());
+				logger.info("Error in SQL query: " + e.getMessage());
 			}
 		}
 
@@ -255,7 +251,7 @@ public class Database {
 			connection = open();
 			// this.connection = this.open();
 			if (connection == null) {
-				plugin.getLogger().severe("Unable to check if tables exist");
+				logger.severe("Unable to check if tables exist");
 				return false;
 			}
 
@@ -274,7 +270,7 @@ public class Database {
 			if (e.getMessage().contains("exist")) {
 				return false;
 			} else {
-				plugin.getLogger().info("Error in SQL query: " + e.getMessage());
+				logger.info("Error in SQL query: " + e.getMessage());
 			}
 		}
 
