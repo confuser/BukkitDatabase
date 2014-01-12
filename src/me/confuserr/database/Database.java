@@ -1,5 +1,9 @@
 package me.confuserr.database;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -8,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -278,5 +283,31 @@ public class Database {
 		}
 
 		return false;
+	}
+
+	public boolean createTables() throws IOException {
+		final String location = "tables/";
+		boolean success = false;
+
+		for (Entry<String, String> entry : tables.entrySet()) {
+			String tableKey = entry.getKey();
+			String tableName = entry.getValue();
+
+			InputStream is = plugin.getResource(location + tableKey + ".sql");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			StringBuilder out = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				out.append(line);
+			}
+
+			String sql = out.toString().replace("{NAME}", tableName);
+			success = createTable(sql);
+
+			if (!success)
+				return false;
+		}
+
+		return true;
 	}
 }
