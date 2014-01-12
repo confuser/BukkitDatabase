@@ -31,7 +31,6 @@
 			<artifactId>bukkit</artifactId>
 			<version>LATEST</version>
 			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>
