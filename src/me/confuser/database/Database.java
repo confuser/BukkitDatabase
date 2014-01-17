@@ -295,9 +295,13 @@ public class Database {
 
 		return false;
 	}
-
+	
 	public boolean createTables() throws IOException {
-		final String location = "tables/";
+		return createTables("");
+	}
+
+	public boolean createTables(String identifier) throws IOException {
+		final String location = "tables/" + (!identifier.equals("") ? identifier + "/" : "");
 		boolean success = false;
 
 		for (Entry<String, String> entry : tables.entrySet()) {
