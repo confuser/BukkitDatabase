@@ -1,4 +1,4 @@
-package me.confuserr.database;
+package me.confuser.database;
 
 import java.io.BufferedReader;
 import java.io.IOException;
