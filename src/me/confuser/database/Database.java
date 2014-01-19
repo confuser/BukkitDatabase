@@ -307,6 +307,8 @@ public class Database {
 		for (Entry<String, String> entry : tables.entrySet()) {
 			String tableKey = entry.getKey();
 			String tableName = entry.getValue();
+			
+			plugin.getLogger().info("Loading " + location + tableKey + ".sql");
 
 			InputStream is = plugin.getResource(location + tableKey + ".sql");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
