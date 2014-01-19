@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class StoredStatement {
-	final String sql;
-	final Object[] params;
-	final Database db;
+	private String sql;
+	private final Object[] params;
+	private final Database db;
 	private PreparedStatement statement = null;
 
 	public StoredStatement(Database db, String sql) {
@@ -40,6 +40,8 @@ public class StoredStatement {
 			statement.setObject(i, param);
 			i++;
 		}
+		
+		sql = statement.toString();
 
 		return statement;
 	}
