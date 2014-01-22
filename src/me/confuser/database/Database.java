@@ -317,6 +317,8 @@ public class Database {
 			while ((line = reader.readLine()) != null) {
 				out.append(line);
 			}
+			
+			reader.close();
 
 			String sql = out.toString().replace("{NAME}", tableName);
 			success = createTable(sql);
